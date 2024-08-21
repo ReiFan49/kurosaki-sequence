@@ -13,19 +13,24 @@ from modules.utils import (
   set as unify_list,
 )
 from modules.types import Fraction, Timespan
+from modules.types.__compatibilities__.enum import StrEnum
 from modules.video_scanner.state import VideoState
 from modules import debug_flags
 
 log = logging.getLogger(__name__)
 
-class SegmentDebugMode(Enum):
+class DebugMode(Enum):
   AUTO = 0
   FORCE_ENABLE = auto()
   FORCE_DISABLE = auto()
 
+class DebugFiles(StrEnum):
+  STATES = '_debug/blue_archive_states.py'
+  SPLITS = '_debug/blue_archive_splits.py'
+
 class VideoSegment(Enum):
   '''
-  VideoSegment represents video key segment of a Blue Archive Video file
+  VideoSegment represents video key segment of a Blue Archive Video file.
   '''
   UNIT_SELECTION = auto()
   LOADING_SCREEN = auto()
@@ -58,8 +63,11 @@ GAME_CUTOFF_RATE  = Fraction(2, 2) # 1.0
 
 GAME_DELAY_CONCLUDE_WAIT = (5, 2)
 
-SEGMENT_DEBUG_MODIFIER = SegmentDebugMode.FORCE_DISABLE
-SEGMENT_DEBUG_MODIFIER = SegmentDebugMode.AUTO
+# Segment Debug Modifier should left disabled
+# when not doing Cutoff Split explicitly.
+SEGMENT_DEBUG_MODIFIER = DebugMode.FORCE_DISABLE
+# Splits Debug Modifier should left automatically check.
+SPLITS_DEBUG_MODIFIER = DebugMode.AUTO
 
 def obtain_event_data(file):
   '''
@@ -67,12 +75,12 @@ def obtain_event_data(file):
 
   Branching only used for debugging.
   '''
-  default_mode = not os.path.exists('debug_states.py')
-  if SEGMENT_DEBUG_MODIFIER is not SegmentDebugMode.AUTO:
-    if default_mode and SEGMENT_DEBUG_MODIFIER is SegmentDebugMode.FORCE_ENABLE:
+  default_mode = not os.path.exists(DebugFiles.STATES)
+  if SEGMENT_DEBUG_MODIFIER is not DebugMode.AUTO:
+    if default_mode and SEGMENT_DEBUG_MODIFIER is DebugMode.FORCE_ENABLE:
       log.error('Pre-calculated state file is not found. Disabling debug mode.')
     else:
-      default_mode = SEGMENT_DEBUG_MODIFIER == SegmentDebugMode.FORCE_DISABLE
+      default_mode = SEGMENT_DEBUG_MODIFIER == DebugMode.FORCE_DISABLE
 
   if default_mode:
     return task.scan_video_timing(file)
@@ -85,8 +93,8 @@ def obtain_event_data(file):
     global_plus['output'] = None
     exec(
       compile(
-        open('debug_states.py').read(),
-        'debug_states.py',
+        open(DebugFiles.STATES).read(),
+        DebugFiles.STATES,
         'exec',
       ), global_plus,
     )
@@ -238,7 +246,14 @@ def scan_video_points(file):
   return split_keys
 
 def convert_video_splits(*files):
-  if True:
+  '''
+  Processes further existing split data of each files.
+  '''
+  debug_mode = os.path.exists(DebugFiles.SPLITS)
+  if debug_mode and SPLITS_DEBUG_MODIFIER is DebugMode.FORCE_DISABLE:
+    debug_mode = False
+
+  if not debug_mode:
     result = dict(
       (fn, scan_video_points(fn))
       for fn in files
@@ -246,10 +261,19 @@ def convert_video_splits(*files):
   else:
     exec_globals = {k: v for k, v in globals().items()}
     exec(
-      open('debug_splits.py').read(),
-      exec_globals,
+      compile(
+        open(DebugFiles.SPLITS).read(),
+        DebugFiles.SPLITS,
+        'exec',
+      ), exec_globals,
     )
-    result = exec_globals['output']
+    result = {
+      fn: timing
+      for fn, timing in exec_globals['output'].items()
+      if fn in files
+    }
+    assert all(file in result for file in files), \
+      'Please confirm every files has been registered into the splits.'
 
   # Equalize cutoff for every splits.
   current_cutoff = INTRO_CUTOFF
@@ -270,17 +294,23 @@ def convert_video_splits(*files):
     'results': result,
   }
 
-def execute_cutoff_detect(parsed):
+def set_debug_segment_flag(parsed):
   global SEGMENT_DEBUG_MODIFIER
-  SEGMENT_DEBUG_MODIFIER = SegmentDebugMode.AUTO
+  SEGMENT_DEBUG_MODIFIER = DebugMode.AUTO
 
   if 'cutoff_debug' in parsed:
     if parsed.cutoff_debug is True:
       log.info('Program will never scan the given video files.')
-      SEGMENT_DEBUG_MODIFIER = SegmentDebugMode.FORCE_ENABLE
+      SEGMENT_DEBUG_MODIFIER = DebugMode.FORCE_ENABLE
     elif parsed.cutoff_debug is False:
       log.info('Program will always scan the given video files.')
-      SEGMENT_DEBUG_MODIFIER = SegmentDebugMode.FORCE_DISABLE
+      SEGMENT_DEBUG_MODIFIER = DebugMode.FORCE_DISABLE
+
+def execute_cutoff_detect(parsed):
+  '''
+  Scan and determine raw timespan of an event for a given file.
+  '''
+  set_debug_segment_flag(parsed)
 
   files = unify_list(parsed.files)
   splits = convert_video_splits(*files)

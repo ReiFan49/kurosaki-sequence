@@ -8,24 +8,24 @@ disable_error_code = 'name-defined'
 
 [tool.ruff]
 exclude = [
-  '_original_script',
+  'original_script',
+  'debug_*.py',
+  '_debug/*',
 ]
 
 line-length = 128
 indent-width = 2
 
 [tool.ruff.lint]
-#select = [
-#  'E4', 'E7', 'E9', 'F',
-#  'D',
-#]
 extend-select = [
-  'D',
+  'D', 'D213',
 ]
 ignore = [
   'E401',
   'F403', 'F405',
   'D10',
+    'D100',
+    'D104',
   'D200', 'D204', 'D212',
   'D300',
   'D401', 'D415',
