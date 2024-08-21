@@ -23,7 +23,7 @@ class RenderBase():
 
 class RenderFileSupport():
   '''
-  render with file support
+  Instructs to support a file to render.
   '''
   def __init__(self, file: str):
     super().__init__()
@@ -31,7 +31,9 @@ class RenderFileSupport():
 
 class RenderVideo(RenderFileSupport, RenderBase):
   '''
-  render video
+  Instructs to support video rendering.
+
+  This allows splicing of given file.
   '''
   def __init__(self, start_time: float, end_time: float, file: str):
     super().__init__(file)
@@ -40,20 +42,20 @@ class RenderVideo(RenderFileSupport, RenderBase):
 
 class RenderStatic(RenderFileSupport, RenderBase):
   '''
-  render static file/image
+  Instructs to support static image/file rendering.
   '''
   def __init__(self, file: str):
     super().__init__(file)
 
 class RenderSpecial(RenderBase):
   '''
-  render special instruction
+  Collection of special rendering instructions.
   '''
   pass
 
 class RenderColorScreen(RenderSpecial):
   '''
-  render special static color
+  Instructs to render a static color.
   '''
   def __init__(self, color: str, width: int, height: int, fps: float):
     super().__init__()
@@ -64,14 +66,14 @@ class RenderColorScreen(RenderSpecial):
 
 class RenderBlackScreen(RenderColorScreen):
   '''
-  render special static black screen
+  Instructs to render a static black background.
   '''
   def __init__(self, width: int, height: int, fps: float):
     super().__init__('black', width, height, fps)
 
 class RenderIgnore(RenderSpecial):
   '''
-  render special object to ignore
+  Instructs to render nothing.
   '''
   pass
 

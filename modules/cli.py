@@ -28,7 +28,6 @@ def describe_subparser_choice(self, action):
   '''
   Format SubparserAction to list all the choices vertically instead.
   '''
-
   if action.help is argparse.SUPPRESS:
     return
 

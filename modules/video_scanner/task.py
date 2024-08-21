@@ -18,6 +18,9 @@ log = logging.getLogger(__name__)
 FRAME_SKIP_SIMILAR_THRESHOLD = 98.0
 
 def check_similarity(previous_frame, current_frame, *, threshold = FRAME_SKIP_SIMILAR_THRESHOLD):
+  '''
+  Checks whether two frames are similar or not, within given threshold.
+  '''
   return utils.calculate_similarity(previous_frame, current_frame) >= threshold
 
 @dataclass(slots=True)
@@ -32,9 +35,15 @@ class ScanState():
 
   @property
   def frame_data(self):
+    '''
+    Proxy function.
+    '''
     return self.frame_event.frame_data
 
   def process(self):
+    '''
+    Scanning flow.
+    '''
     self.frame_event.detect_markers_in_frame(self.frame)
     self.frame_event.prepare_state_changes_in_frame(self.frame)
     self.frame_data.update(self.frame_event.states)

@@ -1,4 +1,4 @@
-from typing import Any
+from typing import Any # noqa: F401
 
 import cv2 as cv # noqa: F401
 

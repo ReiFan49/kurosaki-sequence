@@ -325,6 +325,9 @@ def execute_cutoff_detect(parsed):
   print(output)
 
 def execute_raid_merge(parsed):
+  '''
+  Splices Total Assault videos.
+  '''
   video_files = parsed.files
   image_files = parsed.team_overlays or []
   video_splits = convert_video_splits(*video_files)
@@ -347,6 +350,9 @@ def execute_raid_merge(parsed):
   )
 
 def execute_jfd_merge(parsed):
+  '''
+  Splices Joint Firing Drill videos.
+  '''
   video_files = parsed.files
   image_files = parsed.team_overlays or [None]
   video_splits = convert_video_splits(*video_files)

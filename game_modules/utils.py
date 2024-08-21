@@ -1,7 +1,9 @@
 def scan_game_package(g, mod):
   '''
-  Scan CLI packages under Blue
+  Scan CLI packages of each game modules.
   '''
+  assert g['__package__'] == __package__, f"Only for {__package__} module."
+
   import os
   import glob
   import types

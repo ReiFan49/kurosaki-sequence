@@ -5,6 +5,10 @@ from .state import VideoState
 
 @dataclass(slots=True, frozen=True)
 class StateData():
+  '''
+  Snapshot of state changing events.
+  '''
+
   time : Fraction
   states : dict[VideoState, bool]
 

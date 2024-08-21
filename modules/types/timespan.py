@@ -1,6 +1,6 @@
 import typing
 from dataclasses import dataclass
-from numbers import Number, Rational
+from numbers import Number, Rational # noqa: F401
 from .fraction import Fraction
 
 T = typing.TypeVar('T', int, float, Fraction)

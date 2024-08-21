@@ -3,7 +3,7 @@ import cv2 as cv
 
 def calculate_similarity(previous_frame, current_frame) -> float:
   '''
-  Calculates similarity between two frames
+  Calculates similarity between two frames.
   '''
   difference = cv.absdiff(current_frame, previous_frame)
   difference = cv.cvtColor(difference, cv.COLOR_BGR2GRAY)

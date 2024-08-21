@@ -25,8 +25,10 @@ class VideoTransform():
     output_file: str,
   ):
     '''
-    Initialize default variables and pass the input arguments
-    to data initialization function.
+    Initialize VideoTransform class.
+
+    Initializes blank and default variables,
+    pass the input arguments to initialization function.
     '''
     self.segments : list[str] = []
     self.indices  : dict[str, int] = {}
@@ -44,6 +46,7 @@ class VideoTransform():
   def __enter__(self):
     '''
     Opens up processing context.
+
     Context is used to prepare all required statements before processing it.
     '''
     return self
@@ -77,6 +80,7 @@ class VideoTransform():
   def assign_indices(self):
     '''
     Assigns starting index of given filename.
+
     File list are assumed to be contiguous after processing the segment slots.
     '''
     indices = {}

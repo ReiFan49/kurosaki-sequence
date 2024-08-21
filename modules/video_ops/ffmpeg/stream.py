@@ -117,6 +117,7 @@ NOT_YET_EVALUATED = object()
 class LateExpr():
   '''
   Annotation value for Action object.
+
   Evaluated by VideoProcessor.
   '''
   file: str
