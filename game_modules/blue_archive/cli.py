@@ -104,7 +104,7 @@ def define_parser(g):
     'blue-archive', 'Blue Archive',
     parser_options = {
       'description': 'Set of Blue Archive video-related commands',
-    }
+    },
   )
 
   group_render_mixin = option_mixin_group_render()
@@ -117,7 +117,7 @@ def define_parser(g):
   delete = set(['define_parser'])
   delete.update(
     k
-    for k in g.keys()
+    for k in g
     if k.startswith('option_')
   )
   for delete_key in delete:

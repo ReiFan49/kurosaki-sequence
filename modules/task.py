@@ -20,7 +20,7 @@ def create_filter_script_raid(
   intro_file : str | None,
   video_files : list[str],
   image_files : list[str],
-  video_splits
+  video_splits,
 ):
   with ops.ffmpeg.VideoTransform(
     video_files = video_files,

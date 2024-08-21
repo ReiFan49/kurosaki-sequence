@@ -49,7 +49,7 @@ class VideoStateDict():
 
   def toggle(self, state: VideoState):
     if state not in self:
-      return
+      raise KeyError(state)
     self[state] = not self[state]
 
   def __contains__(self, state: VideoState):
@@ -57,12 +57,12 @@ class VideoStateDict():
 
   def __getitem__(self, state: VideoState):
     if state not in self:
-      return
+      raise KeyError(state)
     return self.states[state]
 
   def __setitem__(self, state: VideoState, value: bool):
     if state not in self:
-      return
+      raise KeyError(state)
     # old_value = self.states[state]
     new_value = bool(value) if value is not None else None
     self.states[state] = new_value
@@ -88,7 +88,7 @@ class VideoFrameData(VideoStateDict):
 
   def __setitem__(self, state, value):
     if state not in self:
-      return
+      raise KeyError(state)
     old_value = self.states[state]
     super().__setitem__(state, value)
     new_value = self.states[state]

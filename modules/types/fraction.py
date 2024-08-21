@@ -27,7 +27,8 @@ class Fraction():
 
     if self.denominator < 0:
       # self.numerator, self.denominator = -self.numerator, -self.denominator
-      self.__init__(-self.numerator, -self.denominator)
+      object.__setattr__(self, 'numerator', -self.numerator)
+      object.__setattr__(self, 'denominator', -self.denominator)
     elif self.denominator == 0:
       raise ZeroDivisionError('division by zero')
 

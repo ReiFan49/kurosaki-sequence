@@ -105,7 +105,7 @@ def calculate_similarity_threshold(scanner, start_threshold : float, reduce_thre
   skip_array = skip_array[skip_array > 0]
   criterion_count = np.count_nonzero(
     (skip_array > 0) &
-    (skip_array < max(1, ave_nerf_rate * skip_array.mean() ** 0.5))
+    (skip_array < max(1, ave_nerf_rate * skip_array.mean() ** 0.5)),
   )
   criterion_count = min(criterion_threshold, max(0, criterion_count - 5))
   threshold_rate = 1.0 - reduce_threshold * ((criterion_count / criterion_threshold) ** 1.5)

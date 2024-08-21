@@ -49,8 +49,9 @@ def evaluate_now(f):
 def ensure_marker(*markers : str):
   def decorator(f):
     def wrapper(frame_event : VideoFrameEvent, frame : np.ndarray):
-      if any(marker in frame_event.marker_results for marker in markers):
-        return f(frame_event, frame)
+      if not any(marker in frame_event.marker_results for marker in markers):
+        return
+      f(frame_event, frame)
     wrapper.__name__ = f.__name__
     wrapper.__required_markers__ = markers
     return wrapper

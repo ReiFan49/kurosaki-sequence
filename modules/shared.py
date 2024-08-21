@@ -60,7 +60,7 @@ def create_subparser(g):
       dest='action',
       **parser_options,
     )
-    return group_parser
+    return group_parser # noqa: RET504
 
   g['parser_new_game'] = parser_new_game
   del g['create_subparser']

@@ -1,3 +1,4 @@
+# ruff: noqa: T201
 import os
 import sys # noqa: F401
 import math
@@ -108,7 +109,7 @@ def convert_state_to_matrix(state_events):
 
   for state_event in state_events:
     state_vector = np.full(state_count, -1)
-    vector_indices = [state.value - 1 for state in state_event.states.keys()]
+    vector_indices = [state.value - 1 for state in state_event.states]
     vector_values = [int(state_value) for state_value in state_event.states.values()]
     np.put(state_vector, vector_indices, vector_values)
     states = np.vstack((*states, state_vector))

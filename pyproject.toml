@@ -19,6 +19,14 @@ indent-width = 2
 [tool.ruff.lint]
 extend-select = [
   'D', 'D213',
+  'COM812',
+  'LOG',
+  'INP',
+  'PIE',
+  'T20',
+  'RET',
+  'SLOT',
+  'SIM',
 ]
 ignore = [
   'E401',
@@ -29,6 +37,9 @@ ignore = [
   'D200', 'D204', 'D212',
   'D300',
   'D401', 'D415',
+  'PIE790',
+  'RET505',
+  'SIM115',
 ]
 
 [tool.ruff.lint.flake8-quotes]

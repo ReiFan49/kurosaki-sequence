@@ -188,7 +188,8 @@ class VideoProcessor(base.VideoProcessor):
             (
               [Stream(video_index + 0, StreamType.VIDEO)], [],
               Action('crop@feedback_piece_crop', args=[
-                f'iw * {blur_data["crop_width"]}', 60, f'iw * {blur_data["crop_left"]}', 0
+                f'iw * {blur_data["crop_width"]}', 60,
+                f'iw * {blur_data["crop_left"]}', 0,
               ]),
             ),
             ([], [], blur_data['color_key_action']),
@@ -232,7 +233,7 @@ class VideoProcessor(base.VideoProcessor):
           (
             [Label(f'rvp{n}_1'), Label(f'i{n}')], [Label(f'rvp{n}_2')],
             Action('overlay', params={'x': '(W-w)/2', 'y': 0}),
-          )
+          ),
         ))
       else:
         commands.append(alias_graph(Label(f'rvp{n}_2'), f'rvp{n}_2'))
@@ -262,7 +263,7 @@ class VideoProcessor(base.VideoProcessor):
 
       map_segments : dict[int, Enum] = {
         k.value: k
-        for k in splits.keys()
+        for k in splits
         if k.value in special_segments
       }
       special_indices = sorted(special_segments)
@@ -312,7 +313,7 @@ class VideoProcessor(base.VideoProcessor):
     '''
     reverse_fade_index = zip(
       range(len(self.tf.video_files) - 1, 0, -1),
-      [len(self.tf.video_files)] + [None] * len(self.tf.video_files)
+      [len(self.tf.video_files)] + [None] * len(self.tf.video_files),
     )
     fade_commands : dict[StreamType, list[Graph]] = dict((s, []) for s in StreamType)
     for source_index, target_index in reverse_fade_index:
@@ -327,8 +328,8 @@ class VideoProcessor(base.VideoProcessor):
       source_duration = round(
         functools.reduce(
           lambda x, y: x + float(y.duration),
-          (split for split in source_splits.values()), 0.0
-        ), 3
+          (split for split in source_splits.values()), 0.0,
+        ), 3,
       ) - (len(source_special_segments) - 1) * fade_duration
 
       source_v_labels, source_a_labels = tuple(
